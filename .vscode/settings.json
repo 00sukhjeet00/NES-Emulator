@@ -1,0 +1,22 @@
+{
+  "makefile.launchConfigurations": [
+    {
+      "cwd": "/Users/apple/Desktop/NES Emulator/output",
+      "binaryPath": "/Users/apple/Desktop/NES Emulator/output/main",
+      "binaryArgs": []
+    }
+  ],
+  "files.associations": {
+    "__tuple": "cpp",
+    "array": "cpp",
+    "__locale": "cpp",
+    "bitset": "cpp",
+    "ios": "cpp",
+    "istream": "cpp",
+    "locale": "cpp",
+    "memory": "cpp",
+    "ostream": "cpp",
+    "streambuf": "cpp",
+    "string": "cpp"
+  }
+}
