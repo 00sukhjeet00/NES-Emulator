@@ -1,6 +1,5 @@
-#include <SDL2/SDL.h>
-#include <chrono>
 #include <iostream>
+#include <SDL2/SDL.h>
 #include <map>
 
 #include "../include/6502.hpp"
@@ -8,19 +7,18 @@
 #include "../include/Mapper/Mapper.hpp"
 #include "../include/PPU.hpp"
 #include "../include/ROM.hpp"
-using namespace std;
 
 int main(int argc, char **argv)
 {
-    string romPath = "";
-    string COMMAND_LINE_ERROR_MESSAGE = "Use -insert <path/to/rom> to start playing.";
+    std::string romPath = "";
+    std::string COMMAND_LINE_ERROR_MESSAGE = "Use -insert <path/to/rom> to start playing.";
     bool fullScreen = false;
 
     if (argc < 2)
     {
-        cout << COMMAND_LINE_ERROR_MESSAGE << "\n";
+        std::cout << COMMAND_LINE_ERROR_MESSAGE << "\n";
     }
-    string option = argv[1];
+    std::string option = argv[1];
 
     if (option == "-insert")
     {
@@ -28,40 +26,40 @@ int main(int argc, char **argv)
     }
     else
     {
-        cout << "Unknow Option\n";
+        std::cout << "Unknow Option\n";
     }
 
     if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_GAMECONTROLLER) < 0)
     {
-        cout << "SDL not working" << SDL_GetError() << "\n";
+        std::cout << "SDL not working" << SDL_GetError() << "\n";
     }
     SDL_GameController *controller = nullptr;
 
     for (int i = 0; i < SDL_NumJoysticks(); i++)
     {
         controller = SDL_GameControllerOpen(i);
-        cout << "Controller detected.";
+        std::cout << "Controller detected.";
         break;
     }
 
-    map<int, int> map;
-    map.insert(pair<int, int>(SDL_CONTROLLER_BUTTON_A, SDLK_a));
-    map.insert(pair<int, int>(SDL_CONTROLLER_BUTTON_B, SDLK_b));
-    map.insert(pair<int, int>(SDL_CONTROLLER_BUTTON_START, SDLK_RETURN));
-    map.insert(pair<int, int>(SDL_CONTROLLER_BUTTON_DPAD_UP, SDLK_UP));
-    map.insert(pair<int, int>(SDL_CONTROLLER_BUTTON_DPAD_DOWN, SDLK_DOWN));
-    map.insert(pair<int, int>(SDL_CONTROLLER_BUTTON_DPAD_LEFT, SDLK_LEFT));
-    map.insert(pair<int, int>(SDL_CONTROLLER_BUTTON_DPAD_RIGHT, SDLK_RIGHT));
+    std::map<int, int> map;
+    map.insert(std::pair<int, int>(SDL_CONTROLLER_BUTTON_A, SDLK_a));
+    map.insert(std::pair<int, int>(SDL_CONTROLLER_BUTTON_B, SDLK_b));
+    map.insert(std::pair<int, int>(SDL_CONTROLLER_BUTTON_START, SDLK_RETURN));
+    map.insert(std::pair<int, int>(SDL_CONTROLLER_BUTTON_DPAD_UP, SDLK_UP));
+    map.insert(std::pair<int, int>(SDL_CONTROLLER_BUTTON_DPAD_DOWN, SDLK_DOWN));
+    map.insert(std::pair<int, int>(SDL_CONTROLLER_BUTTON_DPAD_LEFT, SDLK_LEFT));
+    map.insert(std::pair<int, int>(SDL_CONTROLLER_BUTTON_DPAD_RIGHT, SDLK_RIGHT));
 
     SDL_Window *window;
-    string windowTitle = "NES Emulator";
+    std::string windowTitle = "NES Emulator";
     bool headLessMode = false;
 
     window = SDL_CreateWindow(windowTitle.c_str(), SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 512, 480, SDL_WINDOW_SHOWN);
 
     if (window == NULL)
     {
-        cout << "Could not create window: " << SDL_GetError() << "\n";
+        std::cout << "Could not create window: " << SDL_GetError() << "\n";
         return 1;
     }
 
@@ -89,18 +87,14 @@ int main(int argc, char **argv)
 
     if (mapper == NULL)
     {
-        cout << "Unkown Mapper";
+        std::cout << "Unkown Mapper";
         return -1;
     }
     auto ppu = NES::PPU(mapper);
     NES::Controller Controller;
-    auto cpu = NES::CPU6502(mapperm & ppu, &controller);
+    auto cpu = NES::CPU6502(mapper, &ppu, &Controller);
     cpu.reset();
     SDL_Texture *texture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_ARGB8888, SDL_TEXTUREACCESS_STATIC, 256, 240);
-
-    int nmiCounter = 0;
-    float duration = 0;
-    auto t1 = chrono::high_resolution_clock::now();
 
     while (isRunning)
     {

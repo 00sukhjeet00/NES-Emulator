@@ -4,7 +4,6 @@
 
 namespace NES
 {
-
     void CPU6502::step()
     {
         if (ppu->genNMI())

@@ -1,6 +1,6 @@
 #include "Controller.hpp"
 
-namespace MedNES
+namespace NES
 {
 
     uint8_t NES::Controller::read(uint16_t address)
@@ -83,4 +83,4 @@ namespace MedNES
         }
     }
 
-} // namespace MedNES
+} // namespace NES
