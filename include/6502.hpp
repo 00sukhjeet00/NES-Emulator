@@ -1,13 +1,20 @@
 #pragma once
+
 #include <stdio.h>
-#include <stdio.h>
+
 #include <functional>
 #include <iostream>
 #include <sstream>
 #include <vector>
 
+#include "Controller.hpp"
+#include "Mapper/Mapper.hpp"
+#include "PPU.hpp"
+#include "Ram.hpp"
+
 namespace NES
 {
+
     struct ExecutionState
     {
         uint8_t accumulator;
@@ -26,6 +33,7 @@ namespace NES
             READ,
             WRITE
         };
+
         enum StatusFlags
         {
             NEGATIVE = 7,
@@ -39,11 +47,11 @@ namespace NES
         };
 
     public:
-        CPU6502(){};
+        CPU6502(Mapper *mapper, PPU *ppu, Controller *controller) : mapper(mapper), ppu(ppu), controller(controller){};
         uint8_t fetchInstruction();
         void executeInstruction(uint8_t instruction);
         uint8_t memoryAccess(MemoryAccessMode mode, uint16_t address, uint8_t data);
-        uint8_t read(uint16_t addres);
+        uint8_t read(uint16_t address);
         void write(uint16_t address, uint8_t data);
         void run();
         void step();
@@ -65,10 +73,12 @@ namespace NES
         int cycle = 7;
 
         // Devices
-        // RAM ram;
-        // Mapper *mapper;
+        Ram ram;
+        Mapper *mapper;
         PPU *ppu;
-        // Controller *controller;
+        Controller *controller;
+
+        std::stringstream execLog;
 
         inline void setSRFlag(StatusFlags, bool);
         inline void setNegative(bool);
@@ -80,6 +90,7 @@ namespace NES
         inline void setZero(bool);
         inline void setCarry(bool);
 
+        // vectors
         inline void irq();
         inline void NMI();
 
@@ -93,7 +104,10 @@ namespace NES
 
         inline void tick();
 
+        // stack
         void pushStack(uint8_t);
+
+        uint8_t popStack();
 
         // addressing
         uint16_t immediate();
@@ -333,4 +347,5 @@ namespace NES
 
         inline void pushPC();
     };
-}
+
+}; // namespace NES

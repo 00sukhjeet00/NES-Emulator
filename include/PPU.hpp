@@ -2,14 +2,15 @@
 
 #include <stdint.h>
 #include <stdio.h>
-#include "Bus.hpp"
+
 #include "Mapper/Mapper.hpp"
+
 namespace NES
 {
     struct Sprite
     {
-        uint8_t u;
-        uint8_t titleNum;
+        uint8_t y;
+        uint8_t tileNum;
         uint8_t attr;
         uint8_t x;
         uint8_t id;
@@ -47,7 +48,7 @@ namespace NES
     class PPU
     {
     public:
-        PPU(){};
+        PPU(Mapper *mapper) : mapper(mapper){};
         uint8_t read(uint16_t address);
         void write(uint16_t address, uint8_t data);
 
@@ -59,6 +60,7 @@ namespace NES
         void copyOAM(uint8_t, int);
         uint8_t readOAM(int);
         bool genNMI();
+        bool generateFrame;
         bool genrateFrame();
         void printState();
         uint32_t buffer[256 * 240] = {0};
