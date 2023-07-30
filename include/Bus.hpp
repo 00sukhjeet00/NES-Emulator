@@ -1,24 +1,14 @@
 #pragma once
-#include <cstdint>
-#include "olc6502.hpp"
-#include <iostream>
-#include <array>
+#include <stdint.h>
+#include <stdio.h>
 
-class Bus
+namespace NES
 {
-private:
-    /* data */
-public:
-    Bus()
+    class Bus
     {
-        for (auto &i : ram)
-            i = 0x00;
-        cpu.connectBus(this);
+    public:
+        virtual ~Bus() {}
+        virtual uint8_t read(uint16_t address) = 0;
+        virtual void write(uint16_t address, uint8_t data) = 0;
     };
-    ~Bus();
-    std::array<uint8_t, 64 * 1024> ram;
-    olc6502 cpu;
-
-    void write(uint16_t addr, uint8_t data);
-    uint8_t read(uint16_t addr, bool bReadOnly = false);
-};
+}; // namespace NES

@@ -4,11 +4,10 @@
 #
 
 # define the Cpp compiler to use
-CXX = g++
+CXX = clang++
 
 # define any compile-time flags
-CXXFLAGS	:= -std=c++17 -Wall -Wextra -g
-
+CXXFLAGS	:= -std=c++17 -I/Library/Developer/CommandLineTools/SDKs/MacOSX10.15.sdk/System/Library/Frameworks/Tk.framework/Versions/8.5/Headers/X11/ -L/usr/X11/lib -lX11 -lGL -lpthread -lpng -ldl -Wall -Wextra -g -v
 # define library paths in addition to /usr/lib
 #   if I wanted to include libraries not in /usr/lib I'd specify
 #   their path using -Lpath, something like:
